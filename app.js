@@ -106,7 +106,7 @@ function startExperiment() {
   state.lastFrameTime = state.phaseStart;
   state.trial = 0;
   state.speedParam = CONFIG.initialSpeedParam;
-  state.balls = generateNonOverlappingBalls();
+  state.balls = [];
   state.targetIndices = new Set();
   state.selectedIndices = new Set();
   state.progressSymbols = [];
@@ -184,18 +184,22 @@ function update(now, deltaSeconds) {
 
 function beginTrial(now) {
   state.trial += 1;
+  prepareTrialLayout();
+
+  transitionTo("flash", now);
+}
+
+function prepareTrialLayout() {
   state.balls = generateNonOverlappingBalls();
   state.targetIndices = pickRandomIndices(CONFIG.numObjects, CONFIG.numTargets);
   state.selectedIndices = new Set();
 
-  // 每轮重新随机小球位置和运动方向，确保目标提示阶段有新的空间布局。
+  // 每轮开始都重新随机小球位置和运动方向，然后再进入目标提示阶段。
   for (const ball of state.balls) {
     const direction = randomUnitVector();
     ball.vx = direction.x;
     ball.vy = direction.y;
   }
-
-  transitionTo("flash", now);
 }
 
 function transitionTo(phase, now) {
@@ -584,6 +588,9 @@ function handleCanvasClick(event) {
     const ball = state.balls[i];
     if (Math.hypot(x - ball.x, y - ball.y) <= CONFIG.radius && !state.selectedIndices.has(i)) {
       state.selectedIndices.add(i);
+      if (state.selectedIndices.size === CONFIG.numTargets) {
+        transitionTo("reveal", performance.now());
+      }
       break;
     }
   }
