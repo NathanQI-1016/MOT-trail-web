@@ -177,7 +177,7 @@ function update(now, deltaSeconds) {
     if (state.trial >= CONFIG.maxTrials) {
       showSummary();
     } else {
-      beginTrial(now);
+      beginPreparedTrial(now);
     }
   }
 }
@@ -186,6 +186,11 @@ function beginTrial(now) {
   state.trial += 1;
   prepareTrialLayout();
 
+  transitionTo("flash", now);
+}
+
+function beginPreparedTrial(now) {
+  state.trial += 1;
   transitionTo("flash", now);
 }
 
@@ -227,6 +232,10 @@ function recordTrialResult() {
   });
 
   state.speedParam *= perfect ? CONFIG.adaptiveIncrease : CONFIG.adaptiveDecrease;
+
+  if (state.trial < CONFIG.maxTrials) {
+    prepareTrialLayout();
+  }
 }
 
 function draw(now) {
