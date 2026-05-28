@@ -1,0 +1,155 @@
+:root {
+  --page-bg: #242424;
+  --canvas-bg: #808080;
+  --text: #ffffff;
+  --muted: #d8d8d8;
+  --line: #d0d0d0;
+  --button-bg: #ffffff;
+  --button-text: #171717;
+  --button-hover: #f0f0f0;
+  --table-bg: #303030;
+  --table-border: #5e5e5e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 22px;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+.app-shell {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.hidden {
+  display: none;
+}
+
+.intro-panel,
+.results-panel {
+  max-width: 860px;
+  text-align: center;
+  width: 100%;
+}
+
+.intro-panel h1,
+.results-panel h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.intro-panel p {
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+.intro-panel button {
+  margin-top: 26px;
+}
+
+.experiment-panel {
+  line-height: 0;
+}
+
+#motCanvas {
+  background: var(--canvas-bg);
+  display: block;
+  height: 600px;
+  width: 800px;
+}
+
+.summary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  border: 1px solid var(--table-border);
+  border-radius: 6px;
+  min-width: 170px;
+  padding: 10px 14px;
+}
+
+.summary-label {
+  color: var(--muted);
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  background: var(--table-bg);
+  border-collapse: collapse;
+  min-width: 800px;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid var(--table-border);
+  padding: 10px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+th {
+  color: var(--text);
+  font-weight: 700;
+}
+
+td {
+  color: var(--muted);
+}
+
+.results-panel button {
+  margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .app-shell {
+    align-items: flex-start;
+    overflow-x: auto;
+  }
+}

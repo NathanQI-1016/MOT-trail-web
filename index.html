@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOT 多目标追踪实验</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section id="introPanel" class="intro-panel" aria-labelledby="experimentTitle">
+      <h1 id="experimentTitle">多目标追踪实验</h1>
+      <p>请记住闪烁为红色的小球。</p>
+      <p>小球运动结束后，请用鼠标点击你认为的目标小球。</p>
+      <button id="startButton" type="button">开始实验</button>
+    </section>
+
+    <section id="experimentPanel" class="experiment-panel hidden" aria-label="实验画布">
+      <canvas id="motCanvas" width="800" height="600"></canvas>
+    </section>
+
+    <section id="resultsPanel" class="results-panel hidden" aria-labelledby="resultsTitle">
+      <h2 id="resultsTitle">实验结果汇总</h2>
+      <div id="summaryStats" class="summary-stats"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>轮次</th>
+              <th>本轮速度参数</th>
+              <th>目标小球编号</th>
+              <th>用户选择小球编号</th>
+              <th>选对数量</th>
+              <th>本轮准确率</th>
+              <th>是否完全正确</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+      <button id="restartButton" type="button">重新开始</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
