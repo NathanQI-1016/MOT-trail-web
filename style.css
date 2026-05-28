@@ -1,12 +1,16 @@
 :root {
   --page-bg: #242424;
+  --panel-bg: #303030;
+  --panel-soft: #373737;
   --canvas-bg: #808080;
   --text: #ffffff;
   --muted: #d8d8d8;
-  --line: #d0d0d0;
+  --soft: #bfbfbf;
+  --line: #5e5e5e;
   --button-bg: #ffffff;
   --button-text: #171717;
   --button-hover: #f0f0f0;
+  --accent: #ffcc33;
   --table-bg: #303030;
   --table-border: #5e5e5e;
 }
@@ -31,7 +35,7 @@ button {
   cursor: pointer;
   font: inherit;
   font-weight: 700;
-  padding: 10px 22px;
+  padding: 12px 24px;
 }
 
 button:hover {
@@ -44,7 +48,7 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   min-height: 100vh;
-  padding: 24px;
+  padding: 32px 24px;
 }
 
 .hidden {
@@ -53,27 +57,81 @@ button:hover {
 
 .intro-panel,
 .results-panel {
-  max-width: 860px;
-  text-align: center;
+  max-width: 920px;
   width: 100%;
+}
+
+.intro-hero {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 12px;
+  text-transform: uppercase;
 }
 
 .intro-panel h1,
 .results-panel h2 {
-  font-size: 30px;
+  font-size: 38px;
   font-weight: 700;
-  margin: 0 0 24px;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.intro-panel p {
+.lead {
   color: var(--muted);
   font-size: 20px;
-  line-height: 1.6;
-  margin: 8px 0;
+  line-height: 1.75;
+  margin: 18px 0 0;
+  max-width: 820px;
 }
 
-.intro-panel button {
-  margin-top: 26px;
+.intro-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 24px 0;
+}
+
+.intro-block {
+  background: var(--panel-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 18px;
+}
+
+.intro-block h2,
+.start-copy h2 {
+  font-size: 20px;
+  margin: 0 0 10px;
+}
+
+.intro-block p,
+.start-copy p {
+  color: var(--soft);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.experiment-start {
+  align-items: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.start-copy {
+  max-width: 640px;
 }
 
 .experiment-panel {
@@ -85,6 +143,14 @@ button:hover {
   display: block;
   height: 600px;
   width: 800px;
+}
+
+.results-panel {
+  text-align: center;
+}
+
+.results-panel h2 {
+  margin-bottom: 20px;
 }
 
 .summary-stats {
@@ -151,5 +217,14 @@ td {
   .app-shell {
     align-items: flex-start;
     overflow-x: auto;
+  }
+
+  .intro-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experiment-start {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

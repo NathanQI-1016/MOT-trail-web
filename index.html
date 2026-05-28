@@ -9,10 +9,38 @@
 <body>
   <main class="app-shell">
     <section id="introPanel" class="intro-panel" aria-labelledby="experimentTitle">
-      <h1 id="experimentTitle">多目标追踪实验</h1>
-      <p>请记住闪烁为红色的小球。</p>
-      <p>小球运动结束后，请用鼠标点击你认为的目标小球。</p>
-      <button id="startButton" type="button">开始实验</button>
+      <div class="intro-hero">
+        <p class="eyebrow">Multiple Object Tracking</p>
+        <h1 id="experimentTitle">MOT 多目标追踪实验</h1>
+        <p class="lead">
+          本实验用于测量人在动态视觉场景中同时追踪多个目标的能力。开始后，你需要记住闪烁为红色的小球，并在小球运动结束后选出它们。
+        </p>
+      </div>
+
+      <div class="intro-grid" aria-label="实验介绍">
+        <article class="intro-block">
+          <h2>实验任务</h2>
+          <p>每一轮会出现 9 个小球，其中 4 个目标小球会短暂闪烁为红色。随后所有小球一起运动，你需要持续追踪目标位置。</p>
+        </article>
+
+        <article class="intro-block">
+          <h2>作答方式</h2>
+          <p>运动结束后有 5 秒选择时间。请用鼠标点击你认为的 4 个目标小球，已选择的小球会显示为红色。</p>
+        </article>
+
+        <article class="intro-block">
+          <h2>速度规则</h2>
+          <p>完全选对后下一轮速度提高 10%；未完全正确时下一轮速度降低 10%。系统会记录每轮速度和准确率。</p>
+        </article>
+      </div>
+
+      <div class="experiment-start">
+        <div class="start-copy">
+          <h2>准备开始</h2>
+          <p>点击按钮后，屏幕中央会先显示 5 秒十字注视点，然后进入正式实验。</p>
+        </div>
+        <button id="startButton" type="button">开始实验</button>
+      </div>
     </section>
 
     <section id="experimentPanel" class="experiment-panel hidden" aria-label="实验画布">
