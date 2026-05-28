@@ -10,14 +10,14 @@ const CONFIG = {
   adaptiveIncrease: 1.1,
   adaptiveDecrease: 0.9,
   fixationDuration: 5000,
-  flashHalfDuration: 500,
-  flashTimes: 3,
+  flashHalfDuration: 750,
+  flashTimes: 4,
   motionDuration: 8000,
-  selectionDuration: 5000,
+  selectionDuration: 8000,
   revealDuration: 350,
   answerFlashHalfDurations: [450, 300],
   answerFlashTimes: 2,
-  progressFeedbackDuration: 750,
+  progressFeedbackDuration: 1000,
   minSpawnGap: 8,
   backgroundColor: "#101827",
   textColor: "#ffffff",
@@ -261,19 +261,19 @@ function draw(now) {
   }
 
   if (state.phase === "progressFeedback") {
-    drawFeedbackPause();
+    drawBalls(() => CONFIG.ballNormalColor);
   }
 }
 
 function updateExperimentStatus(now) {
   const labels = {
-    fixation: ["注视准备", "请注视中央十字，正式测试即将开始。"],
-    flash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标提示`, "请记住闪烁为红色的 4 个目标小球。"],
-    motion: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：动态追踪`, "请持续追踪目标小球，运动阶段不显示速度和进程。"],
-    selection: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择目标`, "请点击你认为的目标小球，最多选择 4 个。"],
-    reveal: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择反馈`, "红色为选对目标，紫色为误选或漏选目标。"],
-    answerFlash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标答案`, "正确目标正在闪烁，方便核对追踪结果。"],
-    progressFeedback: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：短暂休息`, "请继续保持专注，下一轮即将开始。"]
+    fixation: ["当前轮次：0 / 10", "当前阶段：注视准备"],
+    flash: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：目标提示"],
+    motion: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：运动中"],
+    selection: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：选择中"],
+    reveal: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：反馈"],
+    answerFlash: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：反馈"],
+    progressFeedback: [`当前轮次：${state.trial} / ${CONFIG.maxTrials}`, "当前阶段：反馈"]
   };
   const [title, detail] = labels[state.phase] || ["实验准备", "请保持专注并按照屏幕提示完成测试。"];
   phaseTitle.textContent = title;
@@ -307,10 +307,6 @@ function drawFixation() {
 
 function drawSpeed() {
   drawCanvasBadge(`速度: ${state.speedParam.toFixed(2)}`, 28, 28);
-}
-
-function drawFeedbackPause() {
-  drawCenteredText("请保持专注，下一轮即将开始", CONFIG.width / 2, CONFIG.height / 2, 28);
 }
 
 function drawBallsForFlash(now) {
