@@ -4,8 +4,7 @@ const CONFIG = {
   numObjects: 9,
   numTargets: 4,
   maxTrials: 10,
-  radius: 24,
-  borderWidth: 2,
+  radius: 32,
   initialSpeedParam: 5.72,
   speedToPixelsPerSecond: 60,
   adaptiveIncrease: 1.1,
@@ -22,11 +21,10 @@ const CONFIG = {
   minSpawnGap: 8,
   backgroundColor: "#101827",
   textColor: "#ffffff",
-  targetFlashColor: "#ff0000",
-  ballNormalColor: "#facc15",
-  ballSelectedColor: "#ff0000",
-  ballMissedOrWrongColor: "#800080",
-  borderColor: "rgba(255, 255, 255, 0.75)"
+  targetFlashColor: "#FF2D2D",
+  ballNormalColor: "#FFD43B",
+  ballSelectedColor: "#FF2D2D",
+  ballMissedOrWrongColor: "#8B5CF6"
 };
 
 const canvas = document.getElementById("motCanvas");
@@ -367,34 +365,30 @@ function drawModernBall(x, y, color) {
   const palette = getBallPalette(color);
   ctx.save();
   ctx.shadowColor = palette.shadow;
-  ctx.shadowBlur = 16;
+  ctx.shadowBlur = 12;
   ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 8;
+  ctx.shadowOffsetY = 5;
 
   const gradient = ctx.createRadialGradient(
-    x - CONFIG.radius * 0.35,
-    y - CONFIG.radius * 0.42,
-    CONFIG.radius * 0.12,
+    x - CONFIG.radius * 0.22,
+    y - CONFIG.radius * 0.26,
+    CONFIG.radius * 0.08,
     x,
     y,
     CONFIG.radius
   );
-  gradient.addColorStop(0, palette.highlight);
-  gradient.addColorStop(0.35, palette.mid);
+  gradient.addColorStop(0, palette.center);
+  gradient.addColorStop(0.72, palette.main);
   gradient.addColorStop(1, palette.edge);
 
   ctx.beginPath();
   ctx.arc(x, y, CONFIG.radius, 0, Math.PI * 2);
   ctx.fillStyle = gradient;
   ctx.fill();
-  ctx.shadowColor = "transparent";
-  ctx.lineWidth = CONFIG.borderWidth;
-  ctx.strokeStyle = CONFIG.borderColor;
-  ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(x - CONFIG.radius * 0.32, y - CONFIG.radius * 0.38, CONFIG.radius * 0.22, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.42)";
+  ctx.arc(x - CONFIG.radius * 0.28, y - CONFIG.radius * 0.30, CONFIG.radius * 0.13, 0, Math.PI * 2);
+  ctx.fillStyle = palette.glint;
   ctx.fill();
   ctx.restore();
 }
@@ -402,25 +396,28 @@ function drawModernBall(x, y, color) {
 function getBallPalette(color) {
   if (color === CONFIG.targetFlashColor || color === CONFIG.ballSelectedColor) {
     return {
-      highlight: "#fecaca",
-      mid: "#ef4444",
-      edge: "#991b1b",
-      shadow: "rgba(239, 68, 68, 0.42)"
+      center: "#FF6B6B",
+      main: "#FF2D2D",
+      edge: "#D60000",
+      glint: "rgba(255, 255, 255, 0.20)",
+      shadow: "rgba(255, 45, 45, 0.38)"
     };
   }
   if (color === CONFIG.ballMissedOrWrongColor) {
     return {
-      highlight: "#e9d5ff",
-      mid: "#a855f7",
-      edge: "#581c87",
-      shadow: "rgba(168, 85, 247, 0.44)"
+      center: "#B794F8",
+      main: "#8B5CF6",
+      edge: "#6D28D9",
+      glint: "rgba(255, 255, 255, 0.18)",
+      shadow: "rgba(139, 92, 246, 0.38)"
     };
   }
   return {
-    highlight: "#fef9c3",
-    mid: "#facc15",
-    edge: "#b45309",
-    shadow: "rgba(250, 204, 21, 0.34)"
+    center: "#FFE680",
+    main: "#FFD43B",
+    edge: "#F59F00",
+    glint: "rgba(255, 255, 255, 0.16)",
+    shadow: "rgba(255, 212, 59, 0.32)"
   };
 }
 
