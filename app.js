@@ -22,7 +22,6 @@ const CONFIG = {
   minSpawnGap: 8,
   backgroundColor: "#808080",
   textColor: "#ffffff",
-  fixationColor: "#ffffff",
   targetFlashColor: "#ff0000",
   ballNormalColor: "#ffff00",
   ballSelectedColor: "#ff0000",
@@ -32,13 +31,20 @@ const CONFIG = {
 
 const canvas = document.getElementById("motCanvas");
 const ctx = canvas.getContext("2d");
+const landingPage = document.getElementById("landingPage");
+const siteHeader = document.getElementById("siteHeader");
 const introPanel = document.getElementById("introPanel");
 const experimentPanel = document.getElementById("experimentPanel");
 const resultsPanel = document.getElementById("resultsPanel");
 const startButton = document.getElementById("startButton");
 const restartButton = document.getElementById("restartButton");
+const backHomeButton = document.getElementById("backHomeButton");
+const resultHomeButton = document.getElementById("resultHomeButton");
+const phaseTitle = document.getElementById("phaseTitle");
+const phaseDetail = document.getElementById("phaseDetail");
 const summaryStats = document.getElementById("summaryStats");
 const resultsBody = document.getElementById("resultsBody");
+const openTestButtons = document.querySelectorAll(".js-open-test");
 
 const bounds = {
   minX: CONFIG.radius,
@@ -61,9 +67,36 @@ const state = {
   trialRecords: []
 };
 
+openTestButtons.forEach((button) => {
+  button.addEventListener("click", showTestIntro);
+});
 startButton.addEventListener("click", startExperiment);
 restartButton.addEventListener("click", startExperiment);
+backHomeButton.addEventListener("click", showHome);
+resultHomeButton.addEventListener("click", showHome);
 canvas.addEventListener("click", handleCanvasClick);
+
+function showTestIntro() {
+  cancelAnimationFrame(state.animationId);
+  state.phase = "instruction";
+  landingPage.classList.add("hidden");
+  experimentPanel.classList.add("hidden");
+  resultsPanel.classList.add("hidden");
+  introPanel.classList.remove("hidden");
+  siteHeader.classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showHome() {
+  cancelAnimationFrame(state.animationId);
+  state.phase = "instruction";
+  introPanel.classList.add("hidden");
+  experimentPanel.classList.add("hidden");
+  resultsPanel.classList.add("hidden");
+  landingPage.classList.remove("hidden");
+  siteHeader.classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 function startExperiment() {
   cancelAnimationFrame(state.animationId);
@@ -78,8 +111,10 @@ function startExperiment() {
   state.progressSymbols = [];
   state.trialRecords = [];
 
+  landingPage.classList.add("hidden");
   introPanel.classList.add("hidden");
   resultsPanel.classList.add("hidden");
+  siteHeader.classList.add("hidden");
   experimentPanel.classList.remove("hidden");
 
   state.animationId = requestAnimationFrame(loop);
@@ -121,7 +156,7 @@ function update(now, deltaSeconds) {
 
   if (state.phase === "selection") {
     if (elapsed >= CONFIG.selectionDuration || state.selectedIndices.size >= CONFIG.numTargets) {
-      finishSelection(now);
+      transitionTo("reveal", now);
     }
     return;
   }
@@ -151,6 +186,7 @@ function beginTrial(now) {
   state.targetIndices = pickRandomIndices(CONFIG.numObjects, CONFIG.numTargets);
   state.selectedIndices = new Set();
 
+  // 每轮重新随机运动方向，但位置继承上一轮结束位置。
   for (const ball of state.balls) {
     const direction = randomUnitVector();
     ball.vx = direction.x;
@@ -164,10 +200,6 @@ function transitionTo(phase, now) {
   state.phase = phase;
   state.phaseStart = now;
   state.lastFrameTime = now;
-}
-
-function finishSelection(now) {
-  transitionTo("reveal", now);
 }
 
 function recordTrialResult() {
@@ -192,6 +224,7 @@ function recordTrialResult() {
 }
 
 function draw(now) {
+  updateExperimentStatus();
   clearCanvas();
 
   if (state.phase === "fixation") {
@@ -230,6 +263,21 @@ function draw(now) {
   if (state.phase === "progressFeedback") {
     drawProgress();
   }
+}
+
+function updateExperimentStatus() {
+  const labels = {
+    fixation: ["注视准备", "请注视中央十字，正式测试即将开始。"],
+    flash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标提示`, "请记住闪烁为红色的 4 个目标小球。"],
+    motion: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：动态追踪`, "请持续追踪目标小球，运动阶段不显示速度和进程。"],
+    selection: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择目标`, "请点击你认为的目标小球，最多选择 4 个。"],
+    reveal: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择反馈`, "红色为选对目标，紫色为误选或漏选目标。"],
+    answerFlash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标答案`, "正确目标正在闪烁，方便核对追踪结果。"],
+    progressFeedback: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：进程记录`, "左侧显示当前实验进程，下一轮即将开始。"]
+  };
+  const [title, detail] = labels[state.phase] || ["实验准备", "请保持专注并按照屏幕提示完成测试。"];
+  phaseTitle.textContent = title;
+  phaseDetail.textContent = detail;
 }
 
 function clearCanvas() {
@@ -384,6 +432,7 @@ function resolveCollisions() {
         const relativeVy = a.vy - b.vy;
         const velocityAlongNormal = relativeVx * nx + relativeVy * ny;
 
+        // 只在两球相向运动时修正速度，避免贴近后反复抖动。
         if (velocityAlongNormal < 0) {
           a.vx -= velocityAlongNormal * nx;
           a.vy -= velocityAlongNormal * ny;
@@ -510,7 +559,10 @@ function randomBetween(min, max) {
 function showSummary() {
   state.phase = "summary";
   cancelAnimationFrame(state.animationId);
+  landingPage.classList.add("hidden");
+  introPanel.classList.add("hidden");
   experimentPanel.classList.add("hidden");
+  siteHeader.classList.add("hidden");
   resultsPanel.classList.remove("hidden");
 
   const averageSpeed = average(state.trialRecords.map((record) => record.speedParam));

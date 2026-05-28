@@ -3,72 +3,259 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOT 多目标追踪实验</title>
+  <title>MOT Vision Test | 多目标追踪视觉能力测试</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app-shell">
-    <section id="introPanel" class="intro-panel" aria-labelledby="experimentTitle">
-      <div class="intro-hero">
-        <p class="eyebrow">Multiple Object Tracking</p>
-        <h1 id="experimentTitle">MOT 多目标追踪实验</h1>
-        <p class="lead">
-          本实验用于测量人在动态视觉场景中同时追踪多个目标的能力。开始后，你需要记住闪烁为红色的小球，并在小球运动结束后选出它们。
-        </p>
+  <header id="siteHeader" class="site-header">
+    <nav class="nav">
+      <a class="brand" href="#home" aria-label="MOT Vision Test 首页">
+        <span class="brand-mark"></span>
+        <span>MOT Vision Test</span>
+      </a>
+      <div class="nav-links" aria-label="主导航">
+        <a href="#home">首页</a>
+        <a href="#about">测试介绍</a>
+        <a href="#audience">适用人群</a>
+        <a href="#flow">测试流程</a>
+        <a href="#metrics">结果指标</a>
+        <button class="nav-link-button js-open-test" type="button">开始测试</button>
       </div>
+      <button class="nav-cta js-open-test" type="button">立即开始</button>
+    </nav>
+  </header>
 
-      <div class="intro-grid" aria-label="实验介绍">
-        <article class="intro-block">
-          <h2>实验任务</h2>
-          <p>每一轮会出现 9 个小球，其中 4 个目标小球会短暂闪烁为红色。随后所有小球一起运动，你需要持续追踪目标位置。</p>
-        </article>
+  <main>
+    <section id="landingPage" class="landing-page">
+      <section id="home" class="hero-section">
+        <div class="section-inner hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">多目标追踪视觉能力测试</p>
+            <h1>在线多目标追踪能力测试</h1>
+            <p class="hero-subtitle">评估你的动态视觉注意力、目标追踪能力与运动认知表现</p>
+            <p class="hero-text">
+              通过经典 MOT 实验任务，帮助用户了解自己在复杂动态场景中的视觉追踪能力。
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button js-open-test" type="button">开始测试</button>
+              <a class="secondary-button" href="#about">了解测试原理</a>
+            </div>
+          </div>
 
-        <article class="intro-block">
-          <h2>作答方式</h2>
-          <p>运动结束后有 5 秒选择时间。请用鼠标点击你认为的 4 个目标小球，已选择的小球会显示为红色。</p>
-        </article>
-
-        <article class="intro-block">
-          <h2>速度规则</h2>
-          <p>完全选对后下一轮速度提高 10%；未完全正确时下一轮速度降低 10%。系统会记录每轮速度和准确率。</p>
-        </article>
-      </div>
-
-      <div class="experiment-start">
-        <div class="start-copy">
-          <h2>准备开始</h2>
-          <p>点击按钮后，屏幕中央会先显示 5 秒十字注视点，然后进入正式实验。</p>
+          <div class="motion-preview" aria-label="多目标追踪模拟视觉区">
+            <div class="preview-topline">
+              <span>Live Tracking Field</span>
+              <strong>9 objects / 4 targets</strong>
+            </div>
+            <div class="preview-canvas">
+              <span class="orbit path-a"></span>
+              <span class="orbit path-b"></span>
+              <span class="orbit path-c"></span>
+              <span class="preview-ball ball-1 target"></span>
+              <span class="preview-ball ball-2"></span>
+              <span class="preview-ball ball-3 target"></span>
+              <span class="preview-ball ball-4"></span>
+              <span class="preview-ball ball-5"></span>
+              <span class="preview-ball ball-6 target"></span>
+              <span class="preview-ball ball-7"></span>
+              <span class="preview-ball ball-8 target"></span>
+              <span class="preview-ball ball-9"></span>
+            </div>
+            <div class="preview-stats">
+              <span><b>5s</b> 注视准备</span>
+              <span><b>8s</b> 动态追踪</span>
+              <span><b>10</b> 测试轮次</span>
+            </div>
+          </div>
         </div>
-        <button id="startButton" type="button">开始实验</button>
+      </section>
+
+      <section id="about" class="content-section">
+        <div class="section-inner split-section">
+          <div>
+            <p class="section-kicker">About MOT</p>
+            <h2>什么是多目标追踪？</h2>
+          </div>
+          <p class="section-lead">
+            多目标追踪（Multiple Object Tracking, MOT）是一种经典认知实验任务。测试者需要在多个相同运动目标中持续追踪指定目标，并在运动结束后准确识别目标。它常用于注意力控制、运动视觉、认知训练和运动员专项能力研究。
+          </p>
+        </div>
+      </section>
+
+      <section class="content-section alt-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="section-kicker">Why It Matters</p>
+            <h2>为什么测试 MOT 能力</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="card-icon">A</span>
+              <h3>动态视觉注意力</h3>
+              <p>观察用户在快速变化场景中维持注意力焦点的能力。</p>
+            </article>
+            <article class="feature-card">
+              <span class="card-icon">M</span>
+              <h3>多目标信息处理</h3>
+              <p>评估同时编码、保持和更新多个目标位置的表现。</p>
+            </article>
+            <article class="feature-card">
+              <span class="card-icon">J</span>
+              <h3>运动场景判断</h3>
+              <p>模拟开放性运动项目中常见的多对象动态判断。</p>
+            </article>
+            <article class="feature-card">
+              <span class="card-icon">D</span>
+              <h3>反应与决策能力</h3>
+              <p>结合选择结果，呈现追踪后的识别和决策质量。</p>
+            </article>
+            <article class="feature-card">
+              <span class="card-icon">T</span>
+              <h3>训练前后对比评估</h3>
+              <p>通过速度参数和准确率，支持训练效果的阶段性比较。</p>
+            </article>
+            <article class="feature-card">
+              <span class="card-icon">R</span>
+              <h3>运动认知研究数据采集</h3>
+              <p>输出每轮速度、目标编号、选择编号和准确率等指标。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="audience" class="content-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="section-kicker">Audience</p>
+            <h2>适用人群</h2>
+          </div>
+          <div class="audience-grid">
+            <article>篮球、足球、羽毛球等开放性运动项目运动员</article>
+            <article>体育教师与教练员</article>
+            <article>体育专业学生</article>
+            <article>运动认知研究者</article>
+            <article>对视觉注意力训练感兴趣的人群</article>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="content-section alt-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="section-kicker">How It Works</p>
+            <h2>测试流程</h2>
+          </div>
+          <div class="step-grid">
+            <article class="step-card"><span>Step 1</span><h3>阅读说明</h3></article>
+            <article class="step-card"><span>Step 2</span><h3>记住红色目标球</h3></article>
+            <article class="step-card"><span>Step 3</span><h3>追踪运动中的目标</h3></article>
+            <article class="step-card"><span>Step 4</span><h3>点击选择目标球</h3></article>
+            <article class="step-card"><span>Step 5</span><h3>查看准确率与速度结果</h3></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="metrics" class="content-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="section-kicker">Metrics</p>
+            <h2>结果指标说明</h2>
+          </div>
+          <div class="metric-grid">
+            <article><h3>本轮速度参数</h3><p>记录该轮实验使用的速度等级。</p></article>
+            <article><h3>目标小球编号</h3><p>系统随机指定的 4 个目标编号。</p></article>
+            <article><h3>用户选择编号</h3><p>用户在选择阶段点击的小球编号。</p></article>
+            <article><h3>选对数量</h3><p>4 个目标中被正确选出的数量。</p></article>
+            <article><h3>本轮准确率</h3><p>选对数量除以 4，例如 2 个为 50%。</p></article>
+            <article><h3>是否完全正确</h3><p>只有 4 个目标全部选对且没有误选才为“是”。</p></article>
+            <article><h3>平均速度参数</h3><p>全部轮次速度参数的平均值。</p></article>
+            <article><h3>最高速度参数</h3><p>测试过程中达到的最高速度等级。</p></article>
+            <article><h3>平均准确率</h3><p>全部轮次准确率的平均表现。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div class="section-inner cta-panel">
+          <div>
+            <p class="section-kicker">Start Now</p>
+            <h2>准备好开始测试了吗？</h2>
+            <p>建议在电脑浏览器中进行测试，并保持专注。</p>
+          </div>
+          <button class="primary-button js-open-test" type="button">开始 MOT 测试</button>
+        </div>
+      </section>
+    </section>
+
+    <section id="introPanel" class="test-intro hidden" aria-labelledby="experimentTitle">
+      <div class="test-intro-card">
+        <p class="section-kicker">Experiment Brief</p>
+        <h1 id="experimentTitle">多目标追踪视觉能力测试</h1>
+        <p>
+          请记住闪烁为红色的小球。小球运动结束后，请用鼠标点击你认为的目标小球。系统会记录每轮速度、准确率和是否完全正确。
+        </p>
+        <div class="test-rules">
+          <article><strong>目标数量</strong><span>每轮 4 个目标球</span></article>
+          <article><strong>运动时间</strong><span>每轮追踪 8 秒</span></article>
+          <article><strong>选择时间</strong><span>最多 5 秒选择</span></article>
+          <article><strong>自适应速度</strong><span>全对加速，未全对降速</span></article>
+        </div>
+        <div class="test-intro-actions">
+          <button id="startButton" class="primary-button" type="button">开始实验</button>
+          <button id="backHomeButton" class="ghost-button" type="button">返回首页</button>
+        </div>
       </div>
     </section>
 
     <section id="experimentPanel" class="experiment-panel hidden" aria-label="实验画布">
-      <canvas id="motCanvas" width="800" height="600"></canvas>
+      <div class="experiment-shell">
+        <div class="experiment-status">
+          <div>
+            <p class="section-kicker">MOT Test Running</p>
+            <h2 id="phaseTitle">实验准备</h2>
+          </div>
+          <p id="phaseDetail">请保持注视并准备追踪目标。</p>
+        </div>
+        <canvas id="motCanvas" width="800" height="600"></canvas>
+      </div>
     </section>
 
     <section id="resultsPanel" class="results-panel hidden" aria-labelledby="resultsTitle">
-      <h2 id="resultsTitle">实验结果汇总</h2>
-      <div id="summaryStats" class="summary-stats"></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>轮次</th>
-              <th>本轮速度参数</th>
-              <th>目标小球编号</th>
-              <th>用户选择小球编号</th>
-              <th>选对数量</th>
-              <th>本轮准确率</th>
-              <th>是否完全正确</th>
-            </tr>
-          </thead>
-          <tbody id="resultsBody"></tbody>
-        </table>
+      <div class="results-card">
+        <p class="section-kicker">Report</p>
+        <h2 id="resultsTitle">实验结果汇总</h2>
+        <div id="summaryStats" class="summary-stats"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>轮次</th>
+                <th>本轮速度参数</th>
+                <th>目标小球编号</th>
+                <th>用户选择小球编号</th>
+                <th>选对数量</th>
+                <th>本轮准确率</th>
+                <th>是否完全正确</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+        <div class="result-actions">
+          <button id="restartButton" class="primary-button" type="button">重新测试</button>
+          <button id="resultHomeButton" class="ghost-button" type="button">返回首页</button>
+        </div>
       </div>
-      <button id="restartButton" type="button">重新开始</button>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="section-inner footer-inner">
+      <strong>MOT Vision Test</strong>
+      <p>本工具仅用于学习、训练和研究参考，不作为医学诊断依据。</p>
+      <span>Copyright © 2026 MOT Vision Test. All rights reserved.</span>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
 </body>
