@@ -1,6 +1,6 @@
 const CONFIG = {
-  width: 800,
-  height: 600,
+  width: 1000,
+  height: 700,
   numObjects: 9,
   numTargets: 4,
   maxTrials: 10,
@@ -20,13 +20,13 @@ const CONFIG = {
   answerFlashTimes: 2,
   progressFeedbackDuration: 750,
   minSpawnGap: 8,
-  backgroundColor: "#808080",
+  backgroundColor: "#101827",
   textColor: "#ffffff",
   targetFlashColor: "#ff0000",
-  ballNormalColor: "#ffff00",
+  ballNormalColor: "#facc15",
   ballSelectedColor: "#ff0000",
   ballMissedOrWrongColor: "#800080",
-  borderColor: "#ffffff"
+  borderColor: "rgba(255, 255, 255, 0.75)"
 };
 
 const canvas = document.getElementById("motCanvas");
@@ -42,6 +42,8 @@ const backHomeButton = document.getElementById("backHomeButton");
 const resultHomeButton = document.getElementById("resultHomeButton");
 const phaseTitle = document.getElementById("phaseTitle");
 const phaseDetail = document.getElementById("phaseDetail");
+const speedReadout = document.getElementById("speedReadout");
+const timeReadout = document.getElementById("timeReadout");
 const summaryStats = document.getElementById("summaryStats");
 const resultsBody = document.getElementById("resultsBody");
 const openTestButtons = document.querySelectorAll(".js-open-test");
@@ -224,7 +226,7 @@ function recordTrialResult() {
 }
 
 function draw(now) {
-  updateExperimentStatus();
+  updateExperimentStatus(now);
   clearCanvas();
 
   if (state.phase === "fixation") {
@@ -261,11 +263,11 @@ function draw(now) {
   }
 
   if (state.phase === "progressFeedback") {
-    drawProgress();
+    drawFeedbackPause();
   }
 }
 
-function updateExperimentStatus() {
+function updateExperimentStatus(now) {
   const labels = {
     fixation: ["注视准备", "请注视中央十字，正式测试即将开始。"],
     flash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标提示`, "请记住闪烁为红色的 4 个目标小球。"],
@@ -273,16 +275,32 @@ function updateExperimentStatus() {
     selection: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择目标`, "请点击你认为的目标小球，最多选择 4 个。"],
     reveal: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：选择反馈`, "红色为选对目标，紫色为误选或漏选目标。"],
     answerFlash: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：目标答案`, "正确目标正在闪烁，方便核对追踪结果。"],
-    progressFeedback: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：进程记录`, "左侧显示当前实验进程，下一轮即将开始。"]
+    progressFeedback: [`第 ${state.trial} / ${CONFIG.maxTrials} 轮：短暂休息`, "请继续保持专注，下一轮即将开始。"]
   };
   const [title, detail] = labels[state.phase] || ["实验准备", "请保持专注并按照屏幕提示完成测试。"];
   phaseTitle.textContent = title;
   phaseDetail.textContent = detail;
+  speedReadout.textContent = state.phase === "motion"
+    ? "速度参数: 追踪中"
+    : `速度参数: ${state.speedParam.toFixed(2)}`;
+  timeReadout.textContent = `剩余时间: ${formatRemainingTime(now)}`;
 }
 
 function clearCanvas() {
-  ctx.fillStyle = CONFIG.backgroundColor;
+  const gradient = ctx.createRadialGradient(
+    CONFIG.width * 0.5,
+    CONFIG.height * 0.42,
+    40,
+    CONFIG.width * 0.5,
+    CONFIG.height * 0.45,
+    CONFIG.width * 0.75
+  );
+  gradient.addColorStop(0, "#172554");
+  gradient.addColorStop(0.52, "#101827");
+  gradient.addColorStop(1, "#060b16");
+  ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+  drawCanvasGrid();
 }
 
 function drawFixation() {
@@ -290,15 +308,11 @@ function drawFixation() {
 }
 
 function drawSpeed() {
-  drawText(`速度: ${state.speedParam.toFixed(2)}`, 95, 34, 24, "left");
+  drawCanvasBadge(`速度: ${state.speedParam.toFixed(2)}`, 28, 28);
 }
 
-function drawProgress() {
-  drawText("进程", 35, 70, 22, "left");
-  for (let i = 0; i < CONFIG.maxTrials; i += 1) {
-    const symbol = state.progressSymbols[i] || "○";
-    drawText(`${String(i + 1).padStart(2, "0")}  ${symbol}`, 35, 105 + i * 28, 20, "left");
-  }
+function drawFeedbackPause() {
+  drawCenteredText("请保持专注，下一轮即将开始", CONFIG.width / 2, CONFIG.height / 2, 28);
 }
 
 function drawBallsForFlash(now) {
@@ -345,14 +359,119 @@ function drawBallsForAnswerFlash(now) {
 
 function drawBalls(colorForIndex) {
   state.balls.forEach((ball, index) => {
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, CONFIG.radius, 0, Math.PI * 2);
-    ctx.fillStyle = colorForIndex(index);
-    ctx.fill();
-    ctx.lineWidth = CONFIG.borderWidth;
-    ctx.strokeStyle = CONFIG.borderColor;
-    ctx.stroke();
+    drawModernBall(ball.x, ball.y, colorForIndex(index));
   });
+}
+
+function drawModernBall(x, y, color) {
+  const palette = getBallPalette(color);
+  ctx.save();
+  ctx.shadowColor = palette.shadow;
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 8;
+
+  const gradient = ctx.createRadialGradient(
+    x - CONFIG.radius * 0.35,
+    y - CONFIG.radius * 0.42,
+    CONFIG.radius * 0.12,
+    x,
+    y,
+    CONFIG.radius
+  );
+  gradient.addColorStop(0, palette.highlight);
+  gradient.addColorStop(0.35, palette.mid);
+  gradient.addColorStop(1, palette.edge);
+
+  ctx.beginPath();
+  ctx.arc(x, y, CONFIG.radius, 0, Math.PI * 2);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = CONFIG.borderWidth;
+  ctx.strokeStyle = CONFIG.borderColor;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x - CONFIG.radius * 0.32, y - CONFIG.radius * 0.38, CONFIG.radius * 0.22, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.42)";
+  ctx.fill();
+  ctx.restore();
+}
+
+function getBallPalette(color) {
+  if (color === CONFIG.targetFlashColor || color === CONFIG.ballSelectedColor) {
+    return {
+      highlight: "#fecaca",
+      mid: "#ef4444",
+      edge: "#991b1b",
+      shadow: "rgba(239, 68, 68, 0.42)"
+    };
+  }
+  if (color === CONFIG.ballMissedOrWrongColor) {
+    return {
+      highlight: "#e9d5ff",
+      mid: "#a855f7",
+      edge: "#581c87",
+      shadow: "rgba(168, 85, 247, 0.44)"
+    };
+  }
+  return {
+    highlight: "#fef9c3",
+    mid: "#facc15",
+    edge: "#b45309",
+    shadow: "rgba(250, 204, 21, 0.34)"
+  };
+}
+
+function drawCanvasGrid() {
+  ctx.save();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.08)";
+  for (let x = 0; x <= CONFIG.width; x += 50) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, CONFIG.height);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= CONFIG.height; y += 50) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(CONFIG.width, y);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = "rgba(34, 211, 238, 0.16)";
+  ctx.strokeRect(0.5, 0.5, CONFIG.width - 1, CONFIG.height - 1);
+  ctx.restore();
+}
+
+function drawCanvasBadge(text, x, y) {
+  ctx.save();
+  ctx.font = '700 22px "Microsoft YaHei", "PingFang SC", Arial, sans-serif';
+  const metrics = ctx.measureText(text);
+  const width = metrics.width + 30;
+  const height = 42;
+  ctx.fillStyle = "rgba(15, 23, 42, 0.62)";
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.32)";
+  ctx.lineWidth = 1;
+  roundRect(ctx, x, y, width, height, 14);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = CONFIG.textColor;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, x + 15, y + height / 2);
+  ctx.restore();
+}
+
+function roundRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.arcTo(x + width, y, x + width, y + height, radius);
+  context.arcTo(x + width, y + height, x, y + height, radius);
+  context.arcTo(x, y + height, x, y, radius);
+  context.arcTo(x, y, x + width, y, radius);
+  context.closePath();
 }
 
 function drawCenteredText(text, x, y, size) {
@@ -554,6 +673,24 @@ function getAnswerFlashDuration() {
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
+}
+
+function formatRemainingTime(now) {
+  const durationByPhase = {
+    fixation: CONFIG.fixationDuration,
+    flash: getFlashDuration(),
+    motion: CONFIG.motionDuration,
+    selection: CONFIG.selectionDuration,
+    reveal: CONFIG.revealDuration,
+    answerFlash: getAnswerFlashDuration(),
+    progressFeedback: CONFIG.progressFeedbackDuration
+  };
+  const duration = durationByPhase[state.phase];
+  if (!duration) {
+    return "--";
+  }
+  const remaining = Math.max(0, duration - (now - state.phaseStart));
+  return `${(remaining / 1000).toFixed(1)}s`;
 }
 
 function showSummary() {

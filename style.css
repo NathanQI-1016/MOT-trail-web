@@ -482,6 +482,16 @@ a {
   margin-top: 12px;
 }
 
+.contact-copy {
+  font-size: 15px;
+}
+
+.contact-copy a,
+.site-footer a {
+  color: #93c5fd;
+  font-weight: 800;
+}
+
 .test-intro,
 .experiment-panel,
 .results-panel {
@@ -548,17 +558,23 @@ a {
 .experiment-shell {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: 28px;
   box-shadow: var(--shadow-md);
-  padding: 20px;
+  max-width: 1080px;
+  padding: 22px;
+  position: relative;
 }
 
 .experiment-status {
   align-items: center;
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(245, 243, 255, 0.96));
+  border: 1px solid var(--line);
+  border-radius: 20px;
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 8px 8px 18px;
+  margin-bottom: 18px;
+  padding: 18px 20px;
 }
 
 .experiment-status h2 {
@@ -572,14 +588,36 @@ a {
 }
 
 #motCanvas {
-  background: var(--canvas-bg);
-  border-radius: 18px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  background: #101827;
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.18),
+    inset 0 0 54px rgba(34, 211, 238, 0.08),
+    0 22px 50px rgba(15, 23, 42, 0.18);
   display: block;
-  height: 600px;
+  height: 700px;
   margin: 0 auto;
   max-width: 100%;
-  width: 800px;
+  width: 1000px;
+}
+
+.experiment-meta {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding-top: 16px;
+}
+
+.experiment-meta span {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 9px 14px;
 }
 
 .results-panel {
@@ -667,6 +705,10 @@ td {
 .footer-inner p,
 .footer-inner span {
   margin: 0;
+}
+
+.footer-inner p {
+  line-height: 1.7;
 }
 
 @media (max-width: 980px) {
