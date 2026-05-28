@@ -21,6 +21,7 @@ const CONFIG = {
   minSpawnGap: 8,
   backgroundColor: "#101827",
   textColor: "#ffffff",
+  targetCueColor: "#00E5FF",
   targetFlashColor: "#FF2D2D",
   ballNormalColor: "#FFD43B",
   ballSelectedColor: "#FF2D2D",
@@ -183,10 +184,11 @@ function update(now, deltaSeconds) {
 
 function beginTrial(now) {
   state.trial += 1;
+  state.balls = generateNonOverlappingBalls();
   state.targetIndices = pickRandomIndices(CONFIG.numObjects, CONFIG.numTargets);
   state.selectedIndices = new Set();
 
-  // 每轮重新随机运动方向，但位置继承上一轮结束位置。
+  // 每轮重新随机小球位置和运动方向，确保目标提示阶段有新的空间布局。
   for (const ball of state.balls) {
     const direction = randomUnitVector();
     ball.vx = direction.x;
@@ -316,7 +318,7 @@ function drawBallsForFlash(now) {
 
   drawBalls((index) => {
     if (targetVisible && state.targetIndices.has(index)) {
-      return CONFIG.targetFlashColor;
+      return CONFIG.targetCueColor;
     }
     return CONFIG.ballNormalColor;
   });
@@ -390,6 +392,15 @@ function drawModernBall(x, y, color) {
 }
 
 function getBallPalette(color) {
+  if (color === CONFIG.targetCueColor) {
+    return {
+      center: "#8FF7FF",
+      main: "#00E5FF",
+      edge: "#0099CC",
+      glint: "rgba(255, 255, 255, 0.18)",
+      shadow: "rgba(0, 229, 255, 0.58)"
+    };
+  }
   if (color === CONFIG.targetFlashColor || color === CONFIG.ballSelectedColor) {
     return {
       center: "#FF6B6B",
